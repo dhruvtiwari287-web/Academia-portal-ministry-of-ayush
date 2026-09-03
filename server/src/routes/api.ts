@@ -1007,7 +1007,7 @@ apiRouter.get('/search', (req, res) => {
 
   const videos = db.videoResources.filter(v =>
     v.title.toLowerCase().includes(query) || v.category.toLowerCase().includes(query) || v.learningObjective.toLowerCase().includes(query)
-  ).map(v => ({ id: v.id, title: v.title, category: v.category, subtitle: `${v.durationMin} min • Source: ${v.source}`, url: `/student/videos` }));
+  ).map(v => ({ id: v.id, title: v.title, category: v.category, subtitle: `${v.duration} • Source: ${v.source}`, url: `/student/videos` }));
 
   const internships = db.opportunities.filter(o =>
     o.title.toLowerCase().includes(query) || o.domain.toLowerCase().includes(query) || o.organization.toLowerCase().includes(query)
@@ -1015,7 +1015,7 @@ apiRouter.get('/search', (req, res) => {
 
   const research = db.researchOpportunities.filter(r =>
     r.title.toLowerCase().includes(query) || r.domain.toLowerCase().includes(query) || r.institution.toLowerCase().includes(query)
-  ).map(r => ({ id: r.id, title: r.title, category: r.domain, subtitle: `${r.institution} • Grant: ${r.grantAmount || 'Institutional'}`, url: `/student/research` }));
+  ).map(r => ({ id: r.id, title: r.title, category: r.domain, subtitle: `${r.institution} • Grant: ${r.grantOrStipend || 'Institutional'}`, url: `/student/research` }));
 
   const mentors = db.mentorProfiles.filter(m =>
     m.name.toLowerCase().includes(query) || m.specialties.some(s => s.toLowerCase().includes(query)) || m.domain.toLowerCase().includes(query)
@@ -1041,8 +1041,8 @@ apiRouter.get('/search', (req, res) => {
   ].filter(w => w.title.toLowerCase().includes(query) || w.category.toLowerCase().includes(query));
 
   const projects = db.liveProjects.filter(p =>
-    p.title.toLowerCase().includes(query) || p.domain.toLowerCase().includes(query) || p.organization.toLowerCase().includes(query)
-  ).map(p => ({ id: p.id, title: p.title, category: p.domain, subtitle: `${p.organization} • ${p.duration}`, url: '/student/projects' }));
+    p.title.toLowerCase().includes(query) || p.category.toLowerCase().includes(query) || p.organization.toLowerCase().includes(query)
+  ).map(p => ({ id: p.id, title: p.title, category: p.category, subtitle: `${p.organization} • ${p.duration}`, url: '/student/projects' }));
 
   return res.json({
     success: true,

@@ -45,7 +45,7 @@ export const Profile: React.FC = () => {
 
   // Student Profile Data (Section 18: Full AYUSH fields)
   const [studentData, setStudentData] = useState({
-    name: user?.name || 'Dr. Ananya Sharma',
+    name: user?.firstName && user?.lastName ? `${user.firstName} ${user.lastName}` : (user as any)?.name || 'Dr. Ananya Sharma',
     email: user?.email || 'ananya.sharma@aiia.gov.in',
     discipline: 'Ayurveda',
     program: 'BAMS (Bachelor of Ayurvedic Medicine & Surgery)',
