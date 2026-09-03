@@ -1,0 +1,6 @@
+{
+  "name": "AYUSH Academia–Industry Collaboration Platform",
+  "description": "Unified platform connecting AYUSH medical students, academicians, mentors, and healthcare industry for competency assessments, career pathways, research projects, internships, and skill passports under Ministry of Ayush and AIIA.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
