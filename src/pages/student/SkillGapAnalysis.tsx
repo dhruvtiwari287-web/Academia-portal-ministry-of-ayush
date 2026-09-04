@@ -35,7 +35,7 @@ export const SkillGapAnalysis: React.FC = () => {
       try {
         const res = await api.getSkillGaps();
         if (res.success) {
-          setGaps(res.gaps);
+          setGaps(res.gaps || res.skillGaps || []);
         }
       } catch (err) {
         console.error(err);
@@ -47,7 +47,7 @@ export const SkillGapAnalysis: React.FC = () => {
   }, []);
 
   // Format data for Recharts Radar
-  const radarData = gaps.map(g => ({
+  const radarData = (gaps || []).map(g => ({
     subject: g.competencyTitle.length > 22 ? g.competencyTitle.slice(0, 20) + '...' : g.competencyTitle,
     fullTitle: g.competencyTitle,
     Current: g.currentScore,
@@ -271,7 +271,7 @@ export const SkillGapAnalysis: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-              {gaps.map(g => (
+              {(gaps || []).map(g => (
                 <tr key={g.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/40">
                   <td className="py-3 px-3 font-semibold text-slate-900 dark:text-slate-100">
                     {g.competencyTitle}

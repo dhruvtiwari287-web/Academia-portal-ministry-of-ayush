@@ -28,7 +28,7 @@ export const SkillAssessment: React.FC = () => {
       try {
         const res = await api.getAssessment();
         if (res.success) {
-          setQuestions(res.questions);
+          setQuestions(res.questions || res.assessment?.questions || []);
         }
       } catch (err) {
         console.error(err);

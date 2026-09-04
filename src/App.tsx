@@ -20,7 +20,6 @@ import { SkillAssessment } from './pages/student/SkillAssessment.js';
 import { SkillGapAnalysis } from './pages/student/SkillGapAnalysis.js';
 import { LearningHub } from './pages/student/LearningHub.js';
 import { CaseBasedLearning } from './pages/student/CaseBasedLearning.js';
-import { VideoLearning } from './pages/student/VideoLearning.js';
 import { Internships } from './pages/student/Internships.js';
 import { MentorshipHub } from './pages/student/MentorshipHub.js';
 import { ResearchOpportunities } from './pages/student/ResearchOpportunities.js';
@@ -37,7 +36,7 @@ import { MentorDashboard } from './pages/mentor/MentorDashboard.js';
 import { RecruiterDashboard } from './pages/recruiter/RecruiterDashboard.js';
 
 const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(() => typeof window !== 'undefined' ? window.innerWidth >= 1024 : true);
   const [searchOpen, setSearchOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
@@ -45,19 +44,30 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   const isPublicPage = location.pathname === '/' || location.pathname === '/login';
 
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && sidebarOpen) {
+        setSidebarOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [sidebarOpen]);
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200">
       {/* Global Navbar */}
       <div className="no-print">
         <Navbar
           onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
+          sidebarOpen={sidebarOpen}
           onOpenSearch={() => setSearchOpen(true)}
           onOpenNotifications={() => setNotificationsOpen(true)}
           onOpenHelp={() => setHelpOpen(true)}
         />
       </div>
 
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex overflow-hidden relative">
         {/* Sidebar (Rendered for portal views) */}
         {!isPublicPage && (
           <div className="no-print">
@@ -67,8 +77,10 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
         {/* Main Content Area */}
         <main
-          className={`flex-1 overflow-y-auto ${
-            isPublicPage ? 'p-0' : 'p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full'
+          className={`flex-1 overflow-y-auto transition-all duration-200 ${
+            isPublicPage
+              ? 'p-0'
+              : `p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full ${sidebarOpen && !isPublicPage ? 'lg:ml-64' : 'lg:ml-0'}`
           }`}
         >
           {children}
@@ -103,7 +115,6 @@ export const App: React.FC = () => {
                 <Route path="/student/skill-gaps" element={<SkillGapAnalysis />} />
                 <Route path="/student/learning" element={<LearningHub />} />
                 <Route path="/student/cases" element={<CaseBasedLearning />} />
-                <Route path="/student/videos" element={<VideoLearning />} />
                 <Route path="/student/internships" element={<Internships />} />
                 <Route path="/student/mentorship" element={<MentorshipHub />} />
                 <Route path="/student/research" element={<ResearchOpportunities />} />

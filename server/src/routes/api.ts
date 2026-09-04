@@ -231,6 +231,7 @@ apiRouter.get('/competencies', (req, res) => {
 apiRouter.get('/skills/gaps', authenticateToken, (req: AuthRequest, res: Response) => {
   return res.json({
     success: true,
+    gaps: db.skillGaps,
     skillGaps: db.skillGaps,
     readinessScore: db.studentProfiles[0].readinessScore,
     radarData: db.competencies.map(c => ({
@@ -306,7 +307,11 @@ apiRouter.get('/assessments', (req, res) => {
     ]
   };
 
-  return res.json({ success: true, assessment });
+  return res.json({
+    success: true,
+    questions: assessment.questions,
+    assessment
+  });
 });
 
 apiRouter.post('/assessments/submit', authenticateToken, (req: AuthRequest, res: Response) => {

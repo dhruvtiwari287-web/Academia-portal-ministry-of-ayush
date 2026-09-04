@@ -9,14 +9,18 @@ import {
   ArrowRight,
   ChevronDown,
   ChevronUp,
-  Loader2
+  Loader2,
+  Sparkles,
+  Video
 } from 'lucide-react';
 import { LearningModule } from '../../types/index.js';
 import { api } from '../../services/api.js';
+import { VisualLearningSystem } from '../../components/student/VisualLearningSystem.js';
 
 export const LearningHub: React.FC = () => {
   const [modules, setModules] = useState<LearningModule[]>([]);
   const [loading, setLoading] = useState(true);
+  const [hubMode, setHubMode] = useState<'CURRICULUM' | 'VISUAL_HUB'>('VISUAL_HUB');
   const [activeTab, setActiveTab] = useState<'ALL' | 'ENROLLED'>('ALL');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedModule, setSelectedModule] = useState<LearningModule | null>(null);
@@ -82,55 +86,87 @@ export const LearningHub: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <div className="flex items-center gap-2 text-xs font-semibold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider mb-1">
-          <BookOpen className="w-4 h-4" />
-          <span>Accredited AYUSH Skill Curricula</span>
-        </div>
-        <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-100">
-          Learning Hub & Competency Modules
-        </h1>
-        <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
-          Accredited modular courses designed with AIIA academic chairs and pharmaceutical experts to bridge clinical trial, quality control, and digital health competencies.
-        </p>
-      </div>
-
-      {/* Filter Tabs & Search */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setActiveTab('ALL')}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
-              activeTab === 'ALL'
-                ? 'bg-emerald-700 text-white'
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200'
-            }`}
-          >
-            All Modules ({modules.length})
-          </button>
-          <button
-            onClick={() => setActiveTab('ENROLLED')}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
-              activeTab === 'ENROLLED'
-                ? 'bg-emerald-700 text-white'
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200'
-            }`}
-          >
-            Enrolled / In Progress ({modules.filter(m => m.enrolled).length})
-          </button>
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2 text-xs font-semibold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider mb-1">
+            <BookOpen className="w-4 h-4" />
+            <span>Accredited AYUSH Skill Curricula & Visual Learning</span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-slate-100">
+            Learning Hub & Medical Visual System
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+            Accredited modular courses, Watch & Learn video hubs, 5-minute micro-learning clips, and interactive medical diagrams.
+          </p>
         </div>
 
-        <div className="relative w-full sm:w-72">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
-          <input
-            type="text"
-            placeholder="Search modules..."
-            value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-3 py-1.5 text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-slate-100 outline-hidden"
-          />
+        {/* Hub Mode Switcher */}
+        <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl shrink-0">
+          <button
+            onClick={() => setHubMode('VISUAL_HUB')}
+            className={`px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors ${
+              hubMode === 'VISUAL_HUB'
+                ? 'bg-emerald-700 text-white shadow-xs'
+                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900'
+            }`}
+          >
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Visual Learning & Media Hub</span>
+          </button>
+          <button
+            onClick={() => setHubMode('CURRICULUM')}
+            className={`px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors ${
+              hubMode === 'CURRICULUM'
+                ? 'bg-emerald-700 text-white shadow-xs'
+                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900'
+            }`}
+          >
+            <BookOpen className="w-3.5 h-3.5" />
+            <span>Curriculum Modules</span>
+          </button>
         </div>
       </div>
+
+      {hubMode === 'VISUAL_HUB' ? (
+        <VisualLearningSystem />
+      ) : (
+        <div className="space-y-6">
+          {/* Filter Tabs & Search */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setActiveTab('ALL')}
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+                  activeTab === 'ALL'
+                    ? 'bg-emerald-700 text-white'
+                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200'
+                }`}
+              >
+                All Modules ({modules.length})
+              </button>
+              <button
+                onClick={() => setActiveTab('ENROLLED')}
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+                  activeTab === 'ENROLLED'
+                    ? 'bg-emerald-700 text-white'
+                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200'
+                }`}
+              >
+                Enrolled / In Progress ({modules.filter(m => m.enrolled).length})
+              </button>
+            </div>
+
+            <div className="relative w-full sm:w-72">
+              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+              <input
+                type="text"
+                placeholder="Search modules..."
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                className="w-full pl-9 pr-3 py-1.5 text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-900 dark:text-slate-100 outline-hidden"
+              />
+            </div>
+          </div>
 
       {/* Grid of Modules */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -223,6 +259,8 @@ export const LearningHub: React.FC = () => {
           </div>
         ))}
       </div>
+    </div>
+  )}
 
       {/* Module Detailed Study Modal / Slideover */}
       {selectedModule && (

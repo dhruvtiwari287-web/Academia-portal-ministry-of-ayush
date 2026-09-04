@@ -11,7 +11,6 @@ import {
   Microscope,
   Users,
   FolderGit2,
-  Video,
   Award,
   IdCard,
   FileCheck2,
@@ -22,9 +21,12 @@ import {
   Building,
   GraduationCap,
   CalendarCheck,
-  Target
+  Target,
+  Sun,
+  Moon
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.js';
+import { useTheme } from '../../context/ThemeContext.js';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -33,6 +35,7 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const { user } = useAuth();
+  const { actualTheme, toggleTheme } = useTheme();
   if (!user) return null;
 
   const role = user.role;
@@ -77,8 +80,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         sectionTitle: 'Learning & Micro-Modules',
         items: [
           { label: 'Learning Hub & Courses', to: '/student/learning', icon: <BookOpen className="w-4 h-4" /> },
-          { label: 'Case-Based Scenarios', to: '/student/cases', icon: <FileText className="w-4 h-4" /> },
-          { label: '5-Min Micro-Learning', to: '/student/videos', icon: <Video className="w-4 h-4" /> }
+          { label: 'Case-Based Scenarios', to: '/student/cases', icon: <FileText className="w-4 h-4" /> }
         ]
       },
       {
@@ -166,20 +168,34 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
 
       <aside
         className={`fixed top-16 bottom-0 left-0 z-30 w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 transition-transform duration-200 ease-in-out flex flex-col ${
-          isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+          isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         {/* User Mini Role Banner */}
-        <div className="p-3.5 border-b border-slate-100 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-800/30">
-          <div className="text-[11px] font-bold tracking-wider uppercase text-slate-400">
-            Current Portal
+        <div className="p-3.5 border-b border-slate-100 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-800/30 flex items-center justify-between">
+          <div>
+            <div className="text-[11px] font-bold tracking-wider uppercase text-slate-400">
+              Current Portal
+            </div>
+            <div className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate">
+              {role === 'STUDENT' && 'Ayurveda Student / Scholar'}
+              {role === 'FACULTY' && 'All India Institute of Ayurveda Faculty'}
+              {role === 'MENTOR' && 'Research & Clinical Mentor'}
+              {role === 'RECRUITER' && 'Healthcare Industry Partner'}
+            </div>
           </div>
-          <div className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate">
-            {role === 'STUDENT' && 'Ayurveda Student / Scholar'}
-            {role === 'FACULTY' && 'All India Institute of Ayurveda Faculty'}
-            {role === 'MENTOR' && 'Research & Clinical Mentor'}
-            {role === 'RECRUITER' && 'Healthcare Industry Partner'}
-          </div>
+          <button
+            onClick={toggleTheme}
+            className="p-2 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 rounded-lg hover:bg-slate-200/60 dark:hover:bg-slate-700/60 transition-colors shrink-0"
+            title={`Switch to ${actualTheme === 'dark' ? 'Light' : 'Dark'} Mode`}
+            aria-label="Toggle Theme"
+          >
+            {actualTheme === 'dark' ? (
+              <Sun className="w-4 h-4 text-amber-400" />
+            ) : (
+              <Moon className="w-4 h-4 text-slate-600" />
+            )}
+          </button>
         </div>
 
         {/* Navigation list */}

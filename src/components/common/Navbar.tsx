@@ -96,8 +96,9 @@ export const Navbar: React.FC<NavbarProps> = ({
               {user && (
                 <button
                   onClick={onToggleSidebar}
-                  className="lg:hidden p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
-                  aria-label="Toggle Navigation Menu"
+                  className="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus:outline-hidden focus:ring-2 focus:ring-emerald-500"
+                  aria-label={sidebarOpen ? "Close navigation" : "Open navigation"}
+                  aria-expanded={sidebarOpen}
                 >
                   {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
                 </button>
